@@ -11,10 +11,10 @@ class DivisionBit:
         for i in range(8):
             self.flat.append(np.where(self.array & flag,1,0))
             flag = flag<<1
-    def show_all(self):
+    def show_flat_all(self):
         for i in range(8):
             Image.fromarray(self.flat[i]*255).show()
-    def show(self,i):
+    def show_flat(self,i):
         Image.fromarray(self.flat[i]*255).show()
     def match(self):
         self.array = np.zeros((self.y,self.x))
@@ -28,13 +28,11 @@ class DivisionBit:
         for i in range(8):
             flat.append(self.flat[i].reshape(-1,))
         (size,) = flat[0].shape
-        print(size)
         array = np.array([])
         for i in range(size):
             for j in range(8):
                 array = np.append(array,flat[j][i])
         array = np.append(array,array)
-        print(array.shape)
         self.array = array.reshape((self.y * 4, self.x * 4))
         Image.fromarray(self.array * 255).show()
     def reset_flat(self):
@@ -46,7 +44,6 @@ class DivisionBit:
             np.array([]), np.array([]), np.array([]), np.array([]),
             np.array([]), np.array([]), np.array([]), np.array([])
         ]
-        print(size)
         for i in range(int(size/8)):
             for j in range(8):
                 bit[j] = np.append(bit[j],array[i * 8 + j])
@@ -58,3 +55,34 @@ class DivisionBit:
         if img.mode != "RGB":
             img = img.convert("RGB")
         img.save(fname)
+    def change(self,data,num):
+        self.flat[num] = data.array
+
+class BitImg:
+    def __init__(self,array):
+        self.flat = array
+        self.array = []
+    def create_img(self,X,Y):
+        (size_y,size_x) = self.flat.shape
+        print(self.flat.shape)
+        self.flat = self.flat.reshape((-1,))
+        all_size = int(size_x*size_y/2)
+        self.flat = self.flat[:all_size]
+        """
+        size_x = int(size_x/2)
+        size_y = int(size_y/2)
+        self.flat = self.flat.reshape((size_y,size_x))
+        """
+        print(50*50*8)
+        print(self.flat.shape)
+        for i in range(int(all_size/8)):
+            self.array.append(0)
+            flag = 0b1
+            for j in range(8):
+                self.array[i] += self.flat[j+i*8]*flag
+                flag = flag<<1
+        self.array = np.array(self.array)
+        print(self.array.shape)
+        self.array = self.array.reshape((Y,X))
+        img = Image.fromarray(self.array).show()
+        
