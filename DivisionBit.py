@@ -22,7 +22,6 @@ class DivisionBit:
         for i in range(8):
             self.array = self.array+self.flat[i]*flag
             flag = flag<<1
-        #Image.fromarray(self.array).show()
     def set_flat(self):
         flat = []
         for i in range(8):
@@ -34,7 +33,6 @@ class DivisionBit:
                 array = np.append(array,flat[j][i])
         array = np.append(array,array)
         self.array = array.reshape((self.y * 4, self.x * 4))
-        #Image.fromarray(self.array * 255).show()
     def reset_flat(self):
         array = self.array.reshape(-1,)
         size, = array.shape
@@ -51,18 +49,12 @@ class DivisionBit:
             bit[i] = bit[i].reshape((int(np.sqrt(size / 8)), int(np.sqrt(size / 8))))
         self.flat = np.array(bit)
     def flat2array(self):
-        print("--------------------------------------")
-        print(self.flat[0].shape)
         array = np.zeros(self.flat[0].shape)
         flag = 0b1
         for i in range(8):
-            Image.fromarray(self.flat[i]*255).show()
             array = array+self.flat[i]*flag
             flag = flag<<1
-        print(array.shape)
-        Image.fromarray(array).show()
         self.array = array
-        print("--------------------------------------")
     def save(self,fname):
         img = Image.fromarray(self.array)
         if img.mode != "RGB":
@@ -72,19 +64,16 @@ class DivisionBit:
         img = Image.fromarray(self.array)
         img.show()
     def change(self,data,num):
-        #Image.fromarray(data.array*255).show()
         self.flat[num] = data.array
 
 class BitImg:
     def __init__(self,array):
         self.flat = array
         self.array = np.array([])
-        #Image.fromarray(array*255).show()
     def create_img(self,X,Y):
         (size_y,size_x) = self.flat.shape
         self.flat = self.flat.reshape((-1,))
         all_size = int(size_x*size_y)
-        #self.flat = self.flat[:all_size]
         array = []
         for i in range(int(all_size/8)):
             array.append(0)
@@ -93,10 +82,11 @@ class BitImg:
                 array[i] += self.flat[j+i*8] * flag
                 flag = flag<<1
         self.array = np.array(array)
-        print(X*Y)
         self.array = self.array[:X*Y]
-        print(self.array)
-        print(self.array.shape)
         self.array = self.array.reshape((Y,X))
-        img = Image.fromarray(self.array).show()
+    def save(self,fname):
+        img = Image.fromarray(self.array)
+        if img.mode != "RGB":
+            img = img.convert("RGB")
+        img.save(fname)
         
