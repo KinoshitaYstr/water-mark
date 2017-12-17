@@ -42,10 +42,19 @@ def create_data(fname):
     Image.fromarray(img_array2).convert("RGB").save("data/"+fname)
 
 def main():
-    sws = SimpleWaterMarkSet("data/Lenna.png","data/idol_fan_penlight_men.png",100,100)
-    sws.calc("result/test1.png")
-    swr = SimpleWaterMarkReset("result/test1.png")
-    swr.calc("result/test2.png")
+    print("電子透かし -> 1,解除 -> 2")
+    mode = input("モード選択 : ")
+    if mode == "1":
+        fname = "data/"+input("挿入画像名入力 : ")
+        base = "data/" + input("挿入先画像名入力 : ")
+        save_fname = "result/"+input("保存画像名入力 : ")
+        sws = SimpleWaterMarkSet(fname,base,100,100)
+        sws.calc(save_fname)
+    else:
+        fname = "data/"+input("画像名入力 : ")
+        save_fname = "result/" + input("保存画像名入力 : ")
+        swr = SimpleWaterMarkReset(fname)
+        swr.calc(save_fname)
     
 
 if __name__ == "__main__":
