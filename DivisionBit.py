@@ -55,34 +55,29 @@ class DivisionBit:
         if img.mode != "RGB":
             img = img.convert("RGB")
         img.save(fname)
+    def show(self):
+        img = Image.fromarray(self.array)
+        img.show()
     def change(self,data,num):
         self.flat[num] = data.array
 
 class BitImg:
     def __init__(self,array):
         self.flat = array
-        self.array = []
+        self.array = np.array([])
     def create_img(self,X,Y):
         (size_y,size_x) = self.flat.shape
-        print(self.flat.shape)
         self.flat = self.flat.reshape((-1,))
         all_size = int(size_x*size_y/2)
         self.flat = self.flat[:all_size]
-        """
-        size_x = int(size_x/2)
-        size_y = int(size_y/2)
-        self.flat = self.flat.reshape((size_y,size_x))
-        """
-        print(50*50*8)
-        print(self.flat.shape)
+        array = []
         for i in range(int(all_size/8)):
-            self.array.append(0)
+            array.append(0)
             flag = 0b1
             for j in range(8):
-                self.array[i] += self.flat[j+i*8]*flag
+                array[i] += self.flat[j+i*8]*flag
                 flag = flag<<1
-        self.array = np.array(self.array)
-        print(self.array.shape)
+        self.array = np.array(array)
         self.array = self.array.reshape((Y,X))
         img = Image.fromarray(self.array).show()
         
